@@ -7,27 +7,13 @@
     <!--  Scripts  -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.6.1/d3.min.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/opus-media-recorder@latest/OpusMediaRecorder.umd.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/opus-media-recorder@latest/encoderWorker.umd.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/web-audio-recorder-js@0.0.2/lib-minified/WebAudioRecorder.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/web-audio-recorder-js@0.0.2/lib-minified/WebAudioRecorderWav.min.js"></script>
+    
 
 </head>
 <body>
-    <div class="left">
-        <div id="startButton" class="button">Start Recording</div>
-        <h2>Preview</h2>
-        <audio id="preview" width="160" height="120" autoplay muted></audio>
-    </div>
+    <h1>Audio</h1>
 
-    <div class="right">
-        <div id="stopButton" class="button">Stop Recording</div>
-        <h2>Recording</h2>
-        <audio id="recording" width="160" height="120" controls></audio>
-        <a id="downloadButton" class="button"> Download </a>
-    </div>
-    <div class="bottom">
-        <pre id="log"></pre>
-    </div>
+    <button id="startRecordingButton">Start recording</button>
+    <button id="playButton">Play</button>
 </body>
 <script src="../static/js/audiorecorder.js"></script>

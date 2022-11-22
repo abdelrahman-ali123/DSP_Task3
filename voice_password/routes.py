@@ -13,6 +13,8 @@ def saveRecord():
     if request.method == 'POST':
         file = request.files['AudioFile']
         file.save(os.path.join('voice_password/static/assets/recorded_audio/recordedAudio.wav'))
-        # sr, audio = wavfile.read('voice_password/static/assets/recorded_audio/recordedAudio.wav')
-        # sr, audio.astype(np.int16).tolist()
+        sr, audio = wavfile.read('voice_password/static/assets/recorded_audio/recordedAudio.wav')
+        
+        if len(audio.shape)>1:
+            audio=audio[:,0]
     return[]
