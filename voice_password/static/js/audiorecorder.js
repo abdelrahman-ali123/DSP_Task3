@@ -160,18 +160,22 @@ function writeUTFBytes(view, offset, string) {
     }
 }
 
-let saveRecord = (audioBlob) => {
-    let formdata = new FormData();
-    formdata.append("AudioFile", audioBlob, "recordedAudio.wav");
+
+let speaker
+let result = document.getElementById('result')
+let saveRecord = (audioBlob)=>{
+    let formdata = new FormData();  
+    formdata.append("AudioFile", audioBlob , "recordedAudio.wav");
     $.ajax({
-        type: "POST",
-        url: `http://127.0.0.1:5000/saveRecord`,
+        type: 'POST',
+        url: `http://127.0.0.1:5000/saveAndPredict`,
         data: formdata,
         contentType: false,
         cache: false,
         processData: false,
-        success:(res)=>{
-
-        }
+        success: function(res) {
+            speaker = res[0]
+            result.innerText= speaker
+        },
     });
 };
