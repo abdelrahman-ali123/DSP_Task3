@@ -153,19 +153,21 @@ var startRecordingButton = document.getElementById("startRecordingButton");
             }
         }
 
-
+let speaker
+let result = document.getElementById('result')
 let saveRecord = (audioBlob)=>{
     let formdata = new FormData();  
     formdata.append("AudioFile", audioBlob , "recordedAudio.wav");
     $.ajax({
         type: 'POST',
-        url: `http://127.0.0.1:5000/saveRecord`,
+        url: `http://127.0.0.1:5000/saveAndPredict`,
         data: formdata,
         contentType: false,
         cache: false,
         processData: false,
         success: function(res) {
-            console.log(res[0])
+            speaker = res[0]
+            result.innerText= speaker
         },
     });
 }
