@@ -62,7 +62,7 @@ function startRecording() {
 
       //start the recording process
     rec.record();
-    setTimeout(stopRecording, 5000)
+    setTimeout(stopRecording, 3000)
 
     })
     .catch(function (err) {
@@ -103,8 +103,8 @@ let saveRecord = (audioBlob) => {
         processData: false,
         success: function (res) {
         speaker = res[0];
-        result.innerText= speaker
-        console.log()
-        },
+        text = res[1]
+        result.innerText= speaker + ' - ' + text
+        }
     });
 };

@@ -16,4 +16,5 @@ def saveRecord():
             'voice_password/static/assets/recorded_audio/recordedAudio.wav'))
 
     speakerName = fn.test_model()
-    return [speakerName]
+    text = fn.test_speech_model()
+    return [speakerName, text]
