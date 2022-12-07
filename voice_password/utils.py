@@ -9,6 +9,7 @@ import pickle
 import time
 import wave
 import os
+import librosa
 
 
 warnings.filterwarnings("ignore")
@@ -144,7 +145,7 @@ def test_model():
     modelpath = "voice_password\\static\\assets\\trained_models\\"
 
     gmm_files = [os.path.join(modelpath, fname) for fname in
-                 os.listdir(modelpath) if fname.endswith('.gmm')]
+                os.listdir(modelpath) if fname.endswith('.gmm')]
 
     # Load the Gaussian gender Models
     models = [pickle.load(open(fname, 'rb')) for fname in gmm_files]
@@ -163,7 +164,7 @@ def test_model():
         log_likelihood[i] = scores.sum()
 
     winner = np.argmax(log_likelihood)
-    print("\tdetected as - ", speakers[winner])
+    # print("\tdetected as - ", speakers[winner])
     time.sleep(1.0)
 
     return speakers[winner]

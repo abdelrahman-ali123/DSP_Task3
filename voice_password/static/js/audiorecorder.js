@@ -1,181 +1,110 @@
-var startRecordingButton = document.getElementById("startRecordingButton");
-var playButton = document.getElementById("playButton");
-var downloadButton = document.getElementById("downloadButton");
+URL = window.URL || window.webkitURL;
 
-var leftchannel = [];
-var rightchannel = [];
-var recorder = null;
-var recordingLength = 0;
-var volume = null;
-var mediaStream = null;
-var sampleRate = 48000;
-var context = null;
-var blob = null;
+var gumStream; //stream from getUserMedia()
+var rec; //Recorder.js object
+var input; //MediaStreamAudioSourceNode we'll be recording
 
-startRecordingButton.addEventListener("click", function () {
-  // Initialize recorder
-    navigator.getUserMedia =
-        navigator.getUserMedia ||
-        navigator.webkitGetUserMedia ||
-        navigator.mozGetUserMedia ||
-        navigator.msGetUserMedia;
-    navigator.getUserMedia(
-        {
-        audio: true,
-        },
-        function (e) {
+// shim for AudioContext when it's not avb.
+var AudioContext = window.AudioContext || window.webkitAudioContext;
+var audioContext; //audio context to help us record
 
-        // creates the audio context
-        window.AudioContext = window.AudioContext || window.webkitAudioContext;
-        context = new AudioContext();
+var recordButton = document.getElementById("recordButton");
 
-        // creates an audio node from the microphone incoming stream
-        mediaStream = context.createMediaStreamSource(e);
+//add events to those 2 buttons
+recordButton.addEventListener("click", startRecording);
 
-        // https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createScriptProcessor
-        // bufferSize: the onaudioprocess event is called when the buffer is full
-        var bufferSize = 2048;
-        var numberOfInputChannels = 2;
-        var numberOfOutputChannels = 2;
-        if (context.createScriptProcessor) {
-            recorder = context.createScriptProcessor(
-            bufferSize,
-            numberOfInputChannels,
-            numberOfOutputChannels
-            );
-        } else {
-            recorder = context.createJavaScriptNode(
-            bufferSize,
-            numberOfInputChannels,
-            numberOfOutputChannels
-            );
-        }
+function startRecording() {
 
-        recorder.onaudioprocess = function (e) {
-            leftchannel.push(new Float32Array(e.inputBuffer.getChannelData(0)));
-            rightchannel.push(new Float32Array(e.inputBuffer.getChannelData(1)));
-            recordingLength += bufferSize;
-        };
+    /*
+            Simple constraints object, for more advanced audio features see
+            https://addpipe.com/blog/audio-constraints-getusermedia/
+        */
 
-        // we connect the recorder
-        mediaStream.connect(recorder);
-        recorder.connect(context.destination);
-        setTimeout(() => {
-        // stop recording
-        recorder.disconnect(context.destination);
-        mediaStream.disconnect(recorder);
-        // mediaStream.getAudioTracks().forEach(track => {
-        //     track.stop();
-        // })
-        // context.close();
-        // we flat the left and right channels down
-        // Float32Array[] => Float32Array
-        var leftBuffer = flattenArray(leftchannel, recordingLength);
-        var rightBuffer = flattenArray(rightchannel, recordingLength);
-        // we interleave both channels together
-        // [left[0],right[0],left[1],right[1],...]
-        var interleaved = interleave(leftBuffer, rightBuffer);
+    var constraints = { audio: true, video: false };
 
-        // we create our wav file
-        var buffer = new ArrayBuffer(44 + interleaved.length * 2);
-        var view = new DataView(buffer);
+    /*
+            Disable the record button until we get a success or fail from getUserMedia() 
+        */
 
-        // RIFF chunk descriptor
-        writeUTFBytes(view, 0, "RIFF");
-        view.setUint32(4, 44 + interleaved.length * 2, true);
-        writeUTFBytes(view, 8, "WAVE");
-        // FMT sub-chunk
-        writeUTFBytes(view, 12, "fmt ");
-        view.setUint32(16, 16, true); // chunkSize
-        view.setUint16(20, 1, true); // wFormatTag
-        view.setUint16(22, 2, true); // wChannels: stereo (2 channels)
-        view.setUint32(24, sampleRate, true); // dwSamplesPerSec
-        view.setUint32(28, sampleRate * 4, true); // dwAvgBytesPerSec
-        view.setUint16(32, 4, true); // wBlockAlign
-        view.setUint16(34, 16, true); // wBitsPerSample
-        // data sub-chunk
-        writeUTFBytes(view, 36, "data");
-        view.setUint32(40, interleaved.length * 2, true);
+    recordButton.disabled = true;
 
-        // write the PCM samples
-        var index = 44;
-        var volume = 1;
-        for (var i = 0; i < interleaved.length; i++) {
-            view.setInt16(index, interleaved[i] * (0x7fff * volume), true);
-            index += 2;
-        }
+  /*
+    	We're using the standard promise based getUserMedia() 
+    	https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
+	*/
 
-        // our final blob
-        blob = new Blob([view], { type: "audio/wav" });
-        saveRecord(blob);
-        leftchannel = [];
-        rightchannel = [];
-        recordingLength = 0;
-        }, 5000);
-    },
-    function (e) {
-        console.error(e);
-    }
-    );
-});
+    navigator.mediaDevices
+        .getUserMedia(constraints)
+        .then(function (stream) {
 
-playButton.addEventListener("click", function () {
-    if (blob == null) {
-        return;
-    }
 
-    var url = window.URL.createObjectURL(blob);
-    var audio = new Audio(url);
-    audio.play();
+/*
+			create an audio context after getUserMedia is called
+			sampleRate might change after getUserMedia is called, like it does on macOS when recording through AirPods
+			the sampleRate defaults to the one set in your OS for your playback device
+		*/
+    audioContext = new AudioContext();
+
+      //update the format
+    
+
+      /*  assign to gumStream for later use  */
+    gumStream = stream;
+
+      /* use the stream */
+    input = audioContext.createMediaStreamSource(stream);
+
+      /* 
+			Create the Recorder object and configure to record mono sound (1 channel)
+			Recording 2 channels  will double the file size
+		*/
+    rec = new Recorder(input, { numChannels: 1 });
+
+      //start the recording process
+    rec.record();
+    setTimeout(stopRecording, 5000)
+
+    })
+    .catch(function (err) {
+      //enable the record button if getUserMedia() fails
+    recordButton.disabled = false;
     });
-
-function flattenArray(channelBuffer, recordingLength) {
-    var result = new Float32Array(recordingLength);
-    var offset = 0;
-    for (var i = 0; i < channelBuffer.length; i++) {
-        var buffer = channelBuffer[i];
-        result.set(buffer, offset);
-        offset += buffer.length;
-    }
-    return result;
-}
-
-function interleave(leftChannel, rightChannel) {
-    var length = leftChannel.length + rightChannel.length;
-    var result = new Float32Array(length);
-
-    var inputIndex = 0;
-
-    for (var index = 0; index < length; ) {
-        result[index++] = leftChannel[inputIndex];
-        result[index++] = rightChannel[inputIndex];
-        inputIndex++;
-    }
-    return result;
-}
-
-function writeUTFBytes(view, offset, string) {
-    for (var i = 0; i < string.length; i++) {
-        view.setUint8(offset + i, string.charCodeAt(i));
-    }
 }
 
 
-let speaker
+
+function stopRecording() {
+
+//disable the stop button, enable the record too allow for new recordings
+recordButton.disabled = false;
+
+
+//tell the recorder to stop the recording
+rec.stop();
+
+//stop microphone access
+gumStream.getAudioTracks()[0].stop();
+
+//create the wav blob and pass it on to createDownloadLink
+rec.exportWAV(saveRecord);
+}
+
+let speaker;
 let result = document.getElementById('result')
-let saveRecord = (audioBlob)=>{
-    let formdata = new FormData();  
-    formdata.append("AudioFile", audioBlob , "recordedAudio.wav");
+let saveRecord = (audioBlob) => {
+    let formdata = new FormData();
+    formdata.append("AudioFile", audioBlob, "recordedAudio.wav");
     $.ajax({
-        type: 'POST',
+        type: "POST",
         url: `http://127.0.0.1:5000/saveAndPredict`,
         data: formdata,
         contentType: false,
         cache: false,
         processData: false,
-        success: function(res) {
-            speaker = res[0]
-            result.innerText= speaker
+        success: function (res) {
+        speaker = res[0];
+        result.innerText= speaker
+        console.log()
         },
     });
 };
