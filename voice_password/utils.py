@@ -57,7 +57,7 @@ def test_model():
     modelpath = "voice_password\\static\\assets\\voice_models\\"
 
     gmm_files = [os.path.join(modelpath, fname) for fname in
-                os.listdir(modelpath) if fname.endswith('.gmm')]
+                 os.listdir(modelpath) if fname.endswith('.gmm')]
 
     # Load the Gaussian Models
     models = [pickle.load(open(fname, 'rb')) for fname in gmm_files]
@@ -70,18 +70,16 @@ def test_model():
     log_likelihood = np.zeros(len(models))
 
     for i in range(len(models)):
-        print(models)
         gmm = models[i]  # checking with each model one by one
         scores = np.array(gmm.score(vector))
-        print(scores)
         log_likelihood[i] = scores.sum()
 
+    print(log_likelihood)
     winner = np.argmax(log_likelihood)
     # print("\tdetected as - ", speakers[winner])
     time.sleep(1.0)
 
     return speakers[winner]
-
 
 
 def test_speech_model():
@@ -90,7 +88,7 @@ def test_speech_model():
     modelpath = "voice_password\\static\\assets\\text_models\\"
 
     gmm_files = [os.path.join(modelpath, fname) for fname in
-                os.listdir(modelpath) if fname.endswith('.gmm')]
+                 os.listdir(modelpath) if fname.endswith('.gmm')]
 
     # Load the Gaussian gender Models
     models = [pickle.load(open(fname, 'rb')) for fname in gmm_files]
@@ -104,9 +102,9 @@ def test_speech_model():
     for i in range(len(models)):
         gmm = models[i]  # checking with each model one by one
         scores = np.array(gmm.score(vector))
-        # print(scores)
         log_likelihood[i] = scores.sum()
 
+    print(log_likelihood)
     winner = np.argmax(log_likelihood)
     # print("\tdetected as - ", speakers[winner])
     time.sleep(1.0)
