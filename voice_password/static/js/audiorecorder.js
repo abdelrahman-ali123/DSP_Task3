@@ -102,7 +102,7 @@ var startRecordingButton = document.getElementById("startRecordingButton");
             leftchannel = []
             rightchannel = []
             recordingLength = 0
-                },5000)
+                },3000)
             },
                         function (e) {
                             console.error(e);
