@@ -64,7 +64,7 @@ def test_model():
     speakers = [fname.split("\\")[-1].split(".gmm")[0] for fname
                 in gmm_files]
 
-    sr, audio = read(audio_path)
+    audio, sr = librosa.load(audio_path)
 
     vector = extract_features(audio, sr)
     log_likelihood = np.zeros(len(models))
