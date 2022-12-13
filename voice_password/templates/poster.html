@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Password</title>
+
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.6.1/d3.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://markjivko.com/dist/recorder.js"></script>
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="../static/css/style.css">
+
+</head>
+<body>
+
+<!-- plan section starts  -->
+
+<section class="plan" id="plan">
+
+    <h1 class="heading"> voice password </h1>
+
+    <div class="box-container">
+
+        <div class="box" id="one">
+            <h3 class="title">Feature Extraction using MFCC</h3>
+            <p>
+               The first step in voice recognition processing is to a developed system to extract computed features of human voice.<br>
+                We used MFCC (Mel Frequency Cepstral Coefficient) technique to extract these
+                voice features from persons.
+                MFCC considers the human voice pitch in the form of frequencies and scale them on the Mel scale, these extracted features are unique to others. <br>
+                After Feature Extraction process, the system undergoes Training and Matching phases.
+            </p>
+
+            <img src="../static/image/mfcc_overview.jpeg" alt="">
+        </div>
+
+        <div class="box" id="two">
+            <h3 class="title">ML Model - GMM</h3>
+            <p>
+               In training process, the extracted features are trained using the Gaussian Mixture Modeling.<br>
+                The Gaussian Mixture Model is a generative model that assumes each data cluster as a different Gaussian distribution. Then it will tell, based on probability, out of which distribution that data point came out and finally used to store in a database.<br>
+                In matching process, the system authenticates the registered person by matching the real time voice sample to the stored voice samples in the database.
+            </p>
+            <img src="../static/image/mixture.gif" alt="" >
+
+        </div>
+
+        <div class="box" id="three">
+            <h3 class="title">Test Here</h3>
+
+            <div id="controls">
+                <a href="#" id="recordButton" class="btn">Record</a>
+            </div>
+            
+            <div id="result">
+            
+            </div>
+
+            
+        </div>
+        <div class="box" id="four">
+            <h3 class="title">Spectrogram</h3>
+
+            <a href="#" class="btn">Generate</a>
+        </div>
+        
+    </div>
+
+</section>
+
+<!-- plan section ends -->
+
+
+
+<!-- custom js file link  -->
+<script src="../static/js/script.js"></script>
+<script src="../static/js/audiorecorder.js"></script>
+
+</body>
+</html>

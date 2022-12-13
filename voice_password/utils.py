@@ -1,4 +1,3 @@
-from sklearn.mixture import GaussianMixture
 from scipy.io.wavfile import read
 from scipy.signal import get_window
 from python_speech_features import mfcc
@@ -12,7 +11,7 @@ import time
 import wave
 import os
 import librosa
-
+import matplotlib.pyplot as plt
 
 warnings.filterwarnings("ignore")
 
@@ -72,14 +71,20 @@ def test_model():
     for i in range(len(models)):
         gmm = models[i]  # checking with each model one by one
         scores = np.array(gmm.score(vector))
+        print(scores)
         log_likelihood[i] = scores.sum()
-
-    print(log_likelihood)
-    winner = np.argmax(log_likelihood)
+        
+    labels = gmm.predict(vector)
+    plt.scatter(vector[:, 0], vector[:, 1], c=labels, s=40, cmap='viridis')
+    if log_likelihood.max() > -22 :
+        winner = np.argmax(log_likelihood)
+    
     # print("\tdetected as - ", speakers[winner])
-    time.sleep(1.0)
+        time.sleep(1.0)
 
-    return speakers[winner]
+        return speakers[winner]
+    else:
+        return 'not recognized'
 
 
 def test_speech_model():

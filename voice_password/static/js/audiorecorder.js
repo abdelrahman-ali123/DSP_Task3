@@ -14,7 +14,7 @@ var recordButton = document.getElementById("recordButton");
 recordButton.addEventListener("click", startRecording);
 
 function startRecording() {
-
+     console.log("GGGGG")
     /*
             Simple constraints object, for more advanced audio features see
             https://addpipe.com/blog/audio-constraints-getusermedia/
@@ -59,10 +59,10 @@ function startRecording() {
 			Recording 2 channels  will double the file size
 		*/
     rec = new Recorder(input, { numChannels: 1 });
-
+   
       //start the recording process
     rec.record();
-    setTimeout(stopRecording, 3000)
+          setTimeout(stopRecording, 3000)
 
     })
     .catch(function (err) {

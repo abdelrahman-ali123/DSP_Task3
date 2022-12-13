@@ -3,4 +3,4 @@ from flask import render_template
 
 @app.route('/')
 def main_route():
-    return render_template('index.html')
+    return render_template('poster.html')
