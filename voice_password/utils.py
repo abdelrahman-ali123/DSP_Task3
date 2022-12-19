@@ -117,18 +117,34 @@ def test_speech_model():
     return speakers[winner]
 
 
+# def plot_input_features():
+#     audio_path = "voice_password\\static\\assets\\recorded_audio\\recordedAudio.wav"
+#     audio, sr = librosa.load(audio_path)
+#     mfcc = librosa.feature.mfcc(audio, sr, n_mfcc=40)
+#     scaled_mfcc = np.mean(mfcc.T, axis=0)
+#     data_to_draw = [scaled_mfcc[13], scaled_mfcc[11]]
+#     return data_to_draw
+
 def plot_input_features():
     audio_path = "voice_password\\static\\assets\\recorded_audio\\recordedAudio.wav"
     audio, sr = librosa.load(audio_path)
-    mfcc = librosa.feature.mfcc(audio, sr, n_mfcc=40)
-    scaled_mfcc = np.mean(mfcc.T, axis=0)
-    data_to_draw = [scaled_mfcc[13], scaled_mfcc[11]]
+    mfcc1 = mfcc(audio, sr, 0.025,
+                        0.01, 20, nfft=1200, appendEnergy=True)
+    scaled_mfcc = np.mean(mfcc1, axis=0)
+    data_to_draw = [scaled_mfcc[3], scaled_mfcc[9]]
     return data_to_draw
+
+# def plot_trained_featutes():
+#     data = pd.read_csv('voice_password/static/assets/13-11_features.csv')
+#     feature_13 = data['13'].values
+#     feature_11 = data['11'].values
+    
+#     return feature_13, feature_11
 
 
 def plot_trained_featutes():
-    data = pd.read_csv('voice_password/static/assets/13-11_features.csv')
-    feature_13 = data['13'].values
-    feature_11 = data['11'].values
+    data = pd.read_csv('voice_password/static/assets/3-9_features.csv')
+    feature_13 = data['3'].values
+    feature_11 = data['9'].values
     
     return feature_13, feature_11
