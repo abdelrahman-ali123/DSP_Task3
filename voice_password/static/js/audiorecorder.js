@@ -9,6 +9,7 @@ var AudioContext = window.AudioContext || window.webkitAudioContext;
 var audioContext; //audio context to help us record
 
 var recordButton = document.getElementById("recordButton");
+var title = document.getElementById("title");
 
 //add events to those 2 buttons
 recordButton.addEventListener("click",  (e)=>{
@@ -134,6 +135,10 @@ let Yousef_data = {
   mode: 'markers',
   type: 'scatter'} 
 
+  let layout = {
+    xaxis:{title:'Feature1'},
+    yaxis:{title:'Feature2'}
+  }
 // Plotly.newPlot('plot', [data]);
 let speaker;
 let result = document.getElementById('result')
@@ -161,7 +166,8 @@ let saveRecord = (audioBlob) => {
         Yousef_data.y = res[3].slice(30,40)
         result.innerText= speaker 
         console.log(input_data)
-        Plotly.newPlot('plot', [Abdelrahman_data, Maye_data, Mohamed_data, Yousef_data, input_data]);
+        Plotly.newPlot('plot', [Abdelrahman_data, Maye_data, Mohamed_data, Yousef_data, input_data], layout);
+        title.innerText = 'Most recognized features in your voice'
 
         }
     });
