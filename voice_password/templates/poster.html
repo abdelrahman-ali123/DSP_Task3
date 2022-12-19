@@ -11,7 +11,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.6.1/d3.min.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="https://markjivko.com/dist/recorder.js"></script>
-    <!-- custom css file link  -->
+    <script src="https://cdn.plot.ly/plotly-2.14.0.min.js"></script>
+    <script
+    src="https://code.jquery.com/jquery-3.6.2.min.js"
+    integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA="
+    crossorigin="anonymous">
+    </script>
+        <!-- custom css file link  -->
     <link rel="stylesheet" href="../static/css/style.css">
 
 </head>
@@ -45,30 +51,34 @@
                 The Gaussian Mixture Model is a generative model that assumes each data cluster as a different Gaussian distribution. Then it will tell, based on probability, out of which distribution that data point came out and finally used to store in a database.<br>
                 In matching process, the system authenticates the registered person by matching the real time voice sample to the stored voice samples in the database.
             </p>
-            <img src="../static/image/mixture.gif" alt="" >
+            <img src="../static/image/clusters.gif" alt="" >
 
         </div>
 
         <div class="box" id="three">
-            <h3 class="title">Test Here</h3>
+            <h3 class="title">Record</h3>
 
             <div id="controls">
-                <a href="#" id="recordButton" class="btn">Record</a>
+                <div class="mic-container" id="recordButton">
+                    <div class="circle">
+                      <i class="fas fa-microphone"></i>
+                    </div>
+                  </div>
             </div>
             
-            <div id="result">
+            <p id="result">
+                
+            <p>
             
+            <div id="plot-area">
+            <h3 class="title">Most recognized features in your voice</h3>
+            <div id="plot">
+
             </div>
 
-            
         </div>
-        <div class="box" id="four">
-            <h3 class="title">Spectrogram</h3>
-
-            <a href="#" class="btn">Generate</a>
         </div>
-        
-    </div>
+    
 
 </section>
 

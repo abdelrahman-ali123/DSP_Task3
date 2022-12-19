@@ -11,10 +11,19 @@ var audioContext; //audio context to help us record
 var recordButton = document.getElementById("recordButton");
 
 //add events to those 2 buttons
-recordButton.addEventListener("click", startRecording);
+recordButton.addEventListener("click",  (e)=>{
+  let elem = e.target;
+  elem.classList.toggle('active');
+  startRecording()
+  // elem.classList.toggle('active');
+  setTimeout(()=>{
+    elem.classList.toggle('active')
+  }, 3000)
+
+
+});
 
 function startRecording() {
-     console.log("GGGGG")
     /*
             Simple constraints object, for more advanced audio features see
             https://addpipe.com/blog/audio-constraints-getusermedia/
@@ -89,6 +98,12 @@ gumStream.getAudioTracks()[0].stop();
 rec.exportWAV(saveRecord);
 }
 
+let data = {
+    x: ['Feature1', 'Feature2', 'Feature3', 'Feature4'],
+    y: [],
+    type: 'bar'
+}
+Plotly.newPlot('plot', [data]);
 let speaker;
 let result = document.getElementById('result')
 let saveRecord = (audioBlob) => {
@@ -103,8 +118,12 @@ let saveRecord = (audioBlob) => {
         processData: false,
         success: function (res) {
         speaker = res[0];
-        text = res[1]
-        result.innerText= speaker + ' - ' + text
+        data.y = res[1]
+        result.innerText= speaker 
+        Plotly.newPlot('plot', [data]);
+
         }
     });
 };
+
+

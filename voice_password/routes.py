@@ -20,7 +20,7 @@ def saveRecord():
         # i+=1
 
     speakerName = fn.test_model()
-    # text = fn.test_speech_model()
-    # return [0, 0]
-    return [speakerName]
-    return [speakerName, text]
+    data_to_draw = fn.plot_input_features()
+    data_to_draw = [float(a) for a in data_to_draw]
+    x_data, y_data = fn.plot_trained_featutes()
+    return [speakerName, data_to_draw, x_data.tolist(), y_data.tolist()]

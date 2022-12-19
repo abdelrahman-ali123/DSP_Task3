@@ -11,6 +11,7 @@ import time
 import wave
 import os
 import librosa
+import pandas as pd
 import matplotlib.pyplot as plt
 
 warnings.filterwarnings("ignore")
@@ -74,17 +75,17 @@ def test_model():
         print(scores)
         log_likelihood[i] = scores.sum()
         
-    labels = gmm.predict(vector)
-    plt.scatter(vector[:, 0], vector[:, 1], c=labels, s=40, cmap='viridis')
-    if log_likelihood.max() > -22 :
+    # labels = gmm.predict(vector)
+    # plt.scatter(vector[:, 0], vector[:, 1], c=labels, s=40, cmap='viridis')
+    if log_likelihood.max() > -23 :
         winner = np.argmax(log_likelihood)
     
     # print("\tdetected as - ", speakers[winner])
         time.sleep(1.0)
 
-        return speakers[winner]
+        return 'Welcome, '+ speakers[winner]
     else:
-        return 'not recognized'
+        return 'Not Recognized'
 
 
 def test_speech_model():
@@ -114,3 +115,20 @@ def test_speech_model():
     # print("\tdetected as - ", speakers[winner])
     time.sleep(1.0)
     return speakers[winner]
+
+
+def plot_input_features():
+    audio_path = "voice_password\\static\\assets\\recorded_audio\\recordedAudio.wav"
+    audio, sr = librosa.load(audio_path)
+    mfcc = librosa.feature.mfcc(audio, sr, n_mfcc=40)
+    scaled_mfcc = np.mean(mfcc.T, axis=0)
+    data_to_draw = [scaled_mfcc[13], scaled_mfcc[11]]
+    return data_to_draw
+
+
+def plot_trained_featutes():
+    data = pd.read_csv('voice_password/static/assets/13-11_features.csv')
+    feature_13 = data['13'].values
+    feature_11 = data['11'].values
+    
+    return feature_13, feature_11
