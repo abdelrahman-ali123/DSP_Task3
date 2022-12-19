@@ -98,12 +98,43 @@ gumStream.getAudioTracks()[0].stop();
 rec.exportWAV(saveRecord);
 }
 
-let data = {
-    x: ['Feature1', 'Feature2', 'Feature3', 'Feature4'],
+let input_data = {
+    x: [],
     y: [],
-    type: 'bar'
+    name:'input' ,
+    mode: 'markers',
+    type: 'scatter',
+    marker:{size:12}
 }
-Plotly.newPlot('plot', [data]);
+let Abdelrahman_data = {
+  x: [],
+  y: [],
+  name:'Abelrahamn' ,
+  mode: 'markers',
+  type: 'scatter'}
+
+let Maye_data = {
+  x: [],
+  y: [],
+  name:'Maye' ,
+  mode: 'markers',
+  type: 'scatter'
+}
+let Mohamed_data = {
+  x: [],
+  y: [],
+  name:'Mohamed' ,
+  mode: 'markers',
+  type: 'scatter'}
+
+let Yousef_data = {
+  x: [],
+  y: [],
+  name:'Yousef' ,
+  mode: 'markers',
+  type: 'scatter'} 
+
+// Plotly.newPlot('plot', [data]);
 let speaker;
 let result = document.getElementById('result')
 let saveRecord = (audioBlob) => {
@@ -118,9 +149,19 @@ let saveRecord = (audioBlob) => {
         processData: false,
         success: function (res) {
         speaker = res[0];
-        data.y = res[1]
+        input_data.x = [res[1][0]]
+        input_data.y = [res[1][1]]
+        Abdelrahman_data.x = res[2].slice(0,10)
+        Abdelrahman_data.y = res[3].slice(0,10)
+        Maye_data.x = res[2].slice(10,20)
+        Maye_data.y = res[3].slice(10,20)
+        Mohamed_data.x = res[2].slice(20,30)
+        Mohamed_data.y = res[3].slice(20,30)
+        Yousef_data.x = res[2].slice(30,40)
+        Yousef_data.y = res[3].slice(30,40)
         result.innerText= speaker 
-        Plotly.newPlot('plot', [data]);
+        console.log(input_data)
+        Plotly.newPlot('plot', [Abdelrahman_data, Maye_data, Mohamed_data, Yousef_data, input_data]);
 
         }
     });
